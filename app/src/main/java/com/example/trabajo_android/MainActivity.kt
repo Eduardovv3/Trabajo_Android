@@ -129,7 +129,7 @@ fun MyContent(innerPadding: PaddingValues) {
     }
 }
 
-
+//hola
 @Composable
 fun contenidoFav(){
     LazyColumn(
