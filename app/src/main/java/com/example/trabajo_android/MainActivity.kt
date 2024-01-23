@@ -2,6 +2,7 @@ package com.example.trabajo_android
 
 import android.media.Image
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
@@ -53,6 +55,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -120,7 +123,7 @@ fun MyTopAppBar() {
 }
 
 @Composable
-fun Itemproducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
+fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
     Card(border = BorderStroke(2.dp, Color.Red),
     modifier = Modifier.width(250.dp) .clickable { onItemSelected(productos)}){
         Column(){
@@ -149,6 +152,33 @@ fun Itemproducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
         }
 
     }
+}
+
+@Composable
+fun ProductosView() {
+    val context = LocalContext.current
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        items(getProductos()) {
+            ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
+        }
+    }
+}
+
+
+
+fun getProductos(): List<Productos> {
+    return listOf(
+        Productos("Spiderman", "Peter Parker", "Marvel", R.drawable.spiderman),
+        Productos("Wolverine", "James Howlett", "Marvel", R.drawable.logan),
+        Productos("Batman", "Bruce Wayne", "DC", R.drawable.batman),
+        Productos("Thor", "Thor Odinson", "Marvel", R.drawable.thor),
+        Productos("Flash", "Jay Garrick", "DC", R.drawable.flash),
+        Productos("Green Lantern", "Alan Scott", "DC", R.drawable.green_lantern),
+        Productos("Wonder Woman", "Princess Diana", "DC", R.drawable.wonder_woman)
+    )
 }
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
