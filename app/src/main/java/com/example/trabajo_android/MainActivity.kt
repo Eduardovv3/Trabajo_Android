@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +24,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -33,6 +37,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -49,6 +54,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -67,14 +74,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Trabajo_AndroidTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Greeting("Android")
+                Inicio()
                 }
             }
         }
     }
-}
+
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
@@ -97,7 +102,7 @@ fun Inicio(){
     Scaffold(
         topBar = { MyTopAppBar() },
         content = { innerPadding ->
-            MyContent(innerPadding)
+            ProductosView(innerPadding)
         },
         bottomBar = { MyBottomNavigation() },
         floatingActionButtonPosition = FabPosition.End,
@@ -109,7 +114,7 @@ fun Inicio(){
 @Composable
 fun MyTopAppBar() {
     TopAppBar(
-        title = { Text("Top App Bar") },
+        title = { Text("Platos más populares") },
         colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.White),
         navigationIcon = {
             IconButton(onClick = { }) { Icon(Icons.Filled.Menu, contentDescription = "Desc") }
@@ -125,7 +130,9 @@ fun MyTopAppBar() {
 @Composable
 fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
     Card(border = BorderStroke(2.dp, Color.Red),
-    modifier = Modifier.width(250.dp) .clickable { onItemSelected(productos)}){
+    modifier = Modifier
+        .width(175.dp)
+        .clickable { onItemSelected(productos) }){
         Column(){
             Image(
                 painter = painterResource(id = productos.Imagen),
@@ -143,23 +150,43 @@ fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 fontSize = 12.sp
             )
-            Text(
-                text = productos.Receta,
-                modifier = Modifier.align(Alignment.End).padding(6.dp),
-                fontSize = 10.sp
-            )
+            Row(
+                modifier =  Modifier
+            ) {
+                Text(
+                    text = productos.Precio,
+                    modifier = Modifier
+                        .padding(6.dp),
+                    fontSize = 10.sp
+                )
+                Text(text = "Marcar favorito",
+                    modifier = Modifier,
+                    fontSize = 15.sp)
+                Checkbox(checked = productos.Favorito,
+                    onCheckedChange = {productos.Favorito = it}
+                )
+            }
+
 
         }
 
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ProductosView() {
+fun ProductosView(innerPadding: PaddingValues) {
     val context = LocalContext.current
-    LazyColumn(
+
+    LazyVerticalGrid(
+        modifier = Modifier
+            .consumeWindowInsets(innerPadding)
+            .padding(vertical = 8.dp, horizontal = 16.dp),
+        columns = GridCells.Fixed(2),
+        contentPadding = innerPadding,
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+
     ) {
         items(getProductos()) {
             ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
@@ -171,13 +198,22 @@ fun ProductosView() {
 
 fun getProductos(): List<Productos> {
     return listOf(
-        Productos("Spiderman", "Peter Parker", "Marvel", R.drawable.spiderman),
-        Productos("Wolverine", "James Howlett", "Marvel", R.drawable.logan),
-        Productos("Batman", "Bruce Wayne", "DC", R.drawable.batman),
-        Productos("Thor", "Thor Odinson", "Marvel", R.drawable.thor),
-        Productos("Flash", "Jay Garrick", "DC", R.drawable.flash),
-        Productos("Green Lantern", "Alan Scott", "DC", R.drawable.green_lantern),
-        Productos("Wonder Woman", "Princess Diana", "DC", R.drawable.wonder_woman)
+        Productos("Paella valenciana", "Peter Parker", "20€", R.drawable.paella_valenciana, false),
+        Productos("Hamburguesa", "Peter Parker", "14.99", R.drawable.hamburguesa, true),
+        Productos("Paella valenciana", "Peter Parker", "Marvel", R.drawable.paella_valenciana, false),
+        Productos("Hamburguesa", "Peter Parker", "Marvel", R.drawable.hamburguesa, false),
+        Productos("Paella valenciana", "Peter Parker", "Marvel", R.drawable.paella_valenciana, false),
+        Productos("Hamburguesa", "Peter Parker", "Marvel", R.drawable.hamburguesa, false),
+        Productos("Paella valenciana", "Peter Parker", "Marvel", R.drawable.paella_valenciana, false),
+        Productos("Hamburguesa", "Peter Parker", "Marvel", R.drawable.hamburguesa, false),
+        Productos("Paella valenciana", "Peter Parker", "Marvel", R.drawable.paella_valenciana, false),
+        Productos("Hamburguesa", "Peter Parker", "Marvel", R.drawable.hamburguesa, false),
+        Productos("Paella valenciana", "Peter Parker", "Marvel", R.drawable.paella_valenciana, false),
+        Productos("Hamburguesa", "Peter Parker", "Marvel", R.drawable.hamburguesa, false),
+        Productos("Paella valenciana", "Peter Parker", "Marvel", R.drawable.paella_valenciana, false),
+        Productos("Hamburguesa", "Peter Parker", "Marvel", R.drawable.hamburguesa, false),
+        Productos("Paella valenciana", "Peter Parker", "Marvel", R.drawable.paella_valenciana, false),
+        Productos("Hamburguesa", "Peter Parker", "Marvel", R.drawable.hamburguesa, false),
     )
 }
 @OptIn(ExperimentalLayoutApi::class)
@@ -216,7 +252,7 @@ fun contenidoPopular(){
 fun MyBottomNavigation() {
     var index by rememberSaveable { mutableIntStateOf(0) }
     NavigationBar(
-        containerColor = Color.Red,
+        containerColor = Color.Gray,
         contentColor = Color.White
     ) {
         NavigationBarItem(
