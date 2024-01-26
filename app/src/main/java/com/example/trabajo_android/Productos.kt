@@ -7,5 +7,6 @@ data class Productos(
     var Ingredientes: String,
     var Precio: String,
     @DrawableRes var Imagen: Int,
-    var Favorito: Boolean
+    var Favorito: Boolean,
+    var Cesta: Boolean
 )
