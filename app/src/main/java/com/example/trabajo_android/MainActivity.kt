@@ -150,20 +150,25 @@ fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 fontSize = 12.sp
             )
-            Row(
-                modifier =  Modifier
-            ) {
+            Text(
+                text = productos.Precio,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(10.dp),
+                fontSize = 15.sp
+            )
+            Row (modifier = Modifier,
+                verticalAlignment = Alignment.CenterVertically)
+            {
                 Text(
-                    text = productos.Precio,
-                    modifier = Modifier
-                        .padding(6.dp),
-                    fontSize = 10.sp
-                )
-                Text(text = "Marcar favorito",
+                    text = "Marcar como favorito",
                     modifier = Modifier,
-                    fontSize = 15.sp)
-                Checkbox(checked = productos.Favorito,
-                    onCheckedChange = {productos.Favorito = it}
+                    fontSize = 15.sp
+                )
+                Checkbox(
+                    checked = productos.Favorito,
+                    onCheckedChange = { productos.Favorito = it },
+                    modifier = Modifier
                 )
             }
 
