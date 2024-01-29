@@ -10,17 +10,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,14 +36,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 
 
-
-@Preview(showBackground = true)
 @Composable
-fun LoginScreeem(){
+fun LoginScreem(NavController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -49,7 +49,7 @@ fun LoginScreeem(){
 
     ){
         Header(Modifier.align(Alignment.TopEnd))
-        Body(Modifier.align(Alignment.Center))
+        Body(Modifier.align(Alignment.Center), NavController)
         //Footer(Modifier.align(Alignment.BottomCenter)
     }
 }
@@ -62,11 +62,11 @@ fun Header(modifier: Modifier){
         modifier = modifier.clickable { activity?.finish() })
 }
 @Composable
-fun Body(modifier: Modifier) {
+fun Body(modifier: Modifier, NavController: NavHostController) {
     var nombre by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
     var contraseña by rememberSaveable { mutableStateOf("")}
-    val isLoginEnable by loginVM.isLoginEnable.observeAsState(false)
+    val isLoginEnable by rememberSaveable { mutableStateOf(false)}
     Column(
         modifier = modifier
     ) {
@@ -77,8 +77,9 @@ fun Body(modifier: Modifier) {
         Email(email) {email = it}
         Spacer(modifier = Modifier.size(8.dp))
         Password(contraseña) {contraseña = it}
+        Spacer(modifier = Modifier.size(8.dp))
         //ForgotPass()
-        //LoginButton()
+        LoginButton(isLoginEnable, NavController)
         //LoginDivisor()
     }
 }
@@ -166,10 +167,10 @@ fun Password(contraseña: String, funtion: (String) -> Unit) {
     )
 }
 @Composable
-fun LoginButton(loginEnable: Boolean, loginVM: LoginViewModel) {
+fun LoginButton(loginEnable: Boolean,NavController: NavHostController) {
     Button(
-        onClick = { loginVM.onLoginSelected() },
-        enabled = loginEnable,
+        onClick = { NavController.navigate(route = Rutas.MenuPrincipal.ruta) },
+        enabled = true,
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color(0xFF4EA8E9),

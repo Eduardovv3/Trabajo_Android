@@ -52,15 +52,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 
 @Composable
-fun Inicio(){
+fun Inicio(NavController: NavHostController){
     Scaffold(
         topBar = { MyTopAppBar() },
         content = { innerPadding ->
             ProductosView(innerPadding)
         },
-        bottomBar = { MyBottomNavigation() },
+        bottomBar = { MyBottomNavigation(NavController) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = { MyFAB() }
     )
@@ -125,8 +127,7 @@ fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
                 )
                 Checkbox(
                     checked = productos.Favorito,
-                    onCheckedChange = { productos.Favorito = it },
-                    modifier = Modifier
+                    onCheckedChange = { productos.Favorito = it }
                 )
             }
             Column (
@@ -140,8 +141,7 @@ fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
                 )
                 Checkbox(
                     checked = productos.Cesta,
-                    onCheckedChange = { productos.Cesta = it },
-                    modifier = Modifier
+                    onCheckedChange = { productos.Cesta = it }
                 )
 
             }
@@ -197,7 +197,7 @@ fun getProductos(): List<Productos> {
 }
 
 @Composable
-fun MyBottomNavigation() {
+fun MyBottomNavigation(NavController: NavHostController) {
     var index by rememberSaveable { mutableIntStateOf(0) }
     NavigationBar(
         containerColor = Color.Gray,
@@ -205,7 +205,7 @@ fun MyBottomNavigation() {
     ) {
         NavigationBarItem(
             selected = index == 0,
-            onClick = { index = 0 },
+            onClick = { NavController.navigate(route = Rutas.LoginSceem.ruta)},
             icon = {
                 Icon(
                     imageVector = Icons.Default.Home,
@@ -216,7 +216,7 @@ fun MyBottomNavigation() {
         )
         NavigationBarItem(
             selected = index == 1,
-            onClick = { index = 1 },
+            onClick = { NavController.navigate(route = Rutas.Favoritos.ruta)},
             icon = {
                 Icon(
                     imageVector = Icons.Default.Favorite,
