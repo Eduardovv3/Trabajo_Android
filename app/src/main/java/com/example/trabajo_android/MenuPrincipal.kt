@@ -52,11 +52,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 
 @Composable
 fun Inicio(NavController: NavHostController){
+
     Scaffold(
         topBar = { MyTopAppBar() },
         content = { innerPadding ->
@@ -127,7 +127,7 @@ fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
                 )
                 Checkbox(
                     checked = productos.Favorito,
-                    onCheckedChange = { productos.Favorito = it }
+                    onCheckedChange = { productos.Favorito = !productos.Favorito }
                 )
             }
             Column (
@@ -141,7 +141,7 @@ fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
                 )
                 Checkbox(
                     checked = productos.Cesta,
-                    onCheckedChange = { productos.Cesta = it }
+                    onCheckedChange = { productos.Cesta = !productos.Cesta }
                 )
 
             }

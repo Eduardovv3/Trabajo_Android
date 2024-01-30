@@ -65,7 +65,7 @@ fun Header(modifier: Modifier){
 fun Body(modifier: Modifier, NavController: NavHostController) {
     var nombre by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
-    var contraseña by rememberSaveable { mutableStateOf("")}
+    var contrasenya by rememberSaveable { mutableStateOf("")}
     val isLoginEnable by rememberSaveable { mutableStateOf(false)}
     Column(
         modifier = modifier
@@ -76,7 +76,7 @@ fun Body(modifier: Modifier, NavController: NavHostController) {
         Spacer(modifier = Modifier.size(8.dp))
         Email(email) {email = it}
         Spacer(modifier = Modifier.size(8.dp))
-        Password(contraseña) {contraseña = it}
+        Password(contrasenya) {contrasenya = it}
         Spacer(modifier = Modifier.size(8.dp))
         //ForgotPass()
         LoginButton(isLoginEnable, NavController)
@@ -87,7 +87,7 @@ fun Body(modifier: Modifier, NavController: NavHostController) {
 @Composable
 fun ImageLogo(modifier: Modifier) {
     Image(
-        painter = painterResource(id = R.drawable.insta),
+        painter = painterResource(id = R.drawable.logo),
         contentDescription = "Logo",
         modifier = modifier
     )
@@ -134,10 +134,10 @@ fun Email(email: String, funtion: (String) -> Unit) {
     )
 }
 @Composable
-fun Password(contraseña: String, funtion: (String) -> Unit) {
+fun Password(contrasenya: String, funtion: (String) -> Unit) {
     var passVisibility by rememberSaveable { mutableStateOf(false) }
     TextField(
-        value = contraseña,
+        value = contrasenya,
         onValueChange = {funtion(it)},
         modifier = Modifier.fillMaxWidth(),
         placeholder = {Text( text = "Contraseña")},
@@ -183,4 +183,3 @@ fun LoginButton(loginEnable: Boolean,NavController: NavHostController) {
         Text("Log In")
     }
 }
-
