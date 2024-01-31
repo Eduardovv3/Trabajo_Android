@@ -2,6 +2,7 @@ package com.example.trabajo_android
 
 import android.app.Activity
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,7 +47,6 @@ fun LoginScreem(NavController: NavHostController) {
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
-
     ){
         Header(Modifier.align(Alignment.TopEnd))
         Body(Modifier.align(Alignment.Center), NavController)

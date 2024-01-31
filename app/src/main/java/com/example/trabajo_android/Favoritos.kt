@@ -46,6 +46,16 @@ fun ProductosViewFav(innerPadding: PaddingValues) {
                 ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
             }
         }
+        items(getProductosChinos()) {
+            if(it.Favorito == true){
+                ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
+            }
+        }
+        items(getProductosJaponesa()) {
+            if(it.Favorito == true){
+                ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
+            }
+        }
     }
 }
 

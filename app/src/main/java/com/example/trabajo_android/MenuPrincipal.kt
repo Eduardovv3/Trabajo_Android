@@ -1,5 +1,6 @@
 package com.example.trabajo_android
 
+import android.app.Activity
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -83,16 +85,17 @@ fun Inicio(NavController: NavHostController, scope: CoroutineScope, drawerState:
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopAppBar(OnOpen: () -> Unit) {
+    val activity = LocalContext.current as? Activity
     TopAppBar(
         title = { Text("Platos más populares") },
-        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.White),
+        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Black),
         navigationIcon = {
             IconButton(onClick = { OnOpen()}) { Icon(Icons.Filled.Menu, contentDescription = "Desc") }
         },
         actions = {
             IconButton(onClick = {}) { Icon(Icons.Filled.Add, contentDescription = "Desc") }
             Spacer(modifier = Modifier.size(6.dp))
-            IconButton(onClick = {}) { Icon(Icons.Filled.Close, contentDescription = "Desc") }
+            IconButton(onClick = {activity?.finish() }) { Icon(Icons.Filled.Close, contentDescription = "Desc") }
         }
     )
 }
@@ -108,19 +111,14 @@ fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
         Column(){
             Image(
                 painter = painterResource(id = productos.Imagen),
-                contentDescription = "SuperHero Avatar",
-                modifier = Modifier.fillMaxWidth(),
+                contentDescription = "Imagen comida",
+                modifier = Modifier.size(175.dp),
                 contentScale = ContentScale.Crop
             )
             Text(
                 text = productos.Nombre,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
 
-            )
-            Text(
-                text = productos.Ingredientes,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                fontSize = 12.sp
             )
             Text(
                 text = productos.Precio,
@@ -192,22 +190,22 @@ fun ProductosView(innerPadding: PaddingValues) {
 
 fun getProductos(): List<Productos> {
     return listOf(
-        Productos("Paella valenciana", "Peter Parker", "20€", R.drawable.paella_valenciana, true, false),
-        Productos("Hamburguesa", "Peter Parker", "14.99", R.drawable.hamburguesa, true, false),
-        Productos("Paella valenciana", "Peter Parker", "Marvel", R.drawable.paella_valenciana, true, false),
-        Productos("Hamburguesa", "Peter Parker", "Marvel", R.drawable.hamburguesa, false, false),
-        Productos("Paella valenciana", "Peter Parker", "Marvel", R.drawable.paella_valenciana, false, false),
-        Productos("Hamburguesa", "Peter Parker", "Marvel", R.drawable.hamburguesa, false, false),
-        Productos("Paella valenciana", "Peter Parker", "Marvel", R.drawable.paella_valenciana, false, false),
-        Productos("Hamburguesa", "Peter Parker", "Marvel", R.drawable.hamburguesa, false, false),
-        Productos("Paella valenciana", "Peter Parker", "Marvel", R.drawable.paella_valenciana, false, false),
-        Productos("Hamburguesa", "Peter Parker", "Marvel", R.drawable.hamburguesa, false, false),
-        Productos("Paella valenciana", "Peter Parker", "Marvel", R.drawable.paella_valenciana, false, false),
-        Productos("Hamburguesa", "Peter Parker", "Marvel", R.drawable.hamburguesa, false, false),
-        Productos("Paella valenciana", "Peter Parker", "Marvel", R.drawable.paella_valenciana, false, false),
-        Productos("Hamburguesa", "Peter Parker", "Marvel", R.drawable.hamburguesa, false, false),
-        Productos("Paella valenciana", "Peter Parker", "Marvel", R.drawable.paella_valenciana, false, false),
-        Productos("Hamburguesa", "Peter Parker", "Marvel", R.drawable.hamburguesa, false, false),
+        Productos("Paella valenciana", "20€", R.drawable.paella_valenciana, true, false),
+        Productos("Hamburguesa", "14.99", R.drawable.hamburguesa, true, false),
+        Productos("Paella valenciana", "Marvel", R.drawable.paella_valenciana, true, false),
+        Productos("Hamburguesa", "Marvel", R.drawable.hamburguesa, false, false),
+        Productos("Paella valenciana", "Marvel", R.drawable.paella_valenciana, false, false),
+        Productos("Hamburguesa", "Marvel", R.drawable.hamburguesa, false, false),
+        Productos("Paella valenciana", "Marvel", R.drawable.paella_valenciana, false, false),
+        Productos("Hamburguesa", "Marvel", R.drawable.hamburguesa, false, false),
+        Productos("Paella valenciana", "Marvel", R.drawable.paella_valenciana, false, false),
+        Productos("Hamburguesa", "Marvel", R.drawable.hamburguesa, false, false),
+        Productos("Paella valenciana", "Marvel", R.drawable.paella_valenciana, false, false),
+        Productos("Hamburguesa", "Marvel", R.drawable.hamburguesa, false, false),
+        Productos("Paella valenciana", "Marvel", R.drawable.paella_valenciana, false, false),
+        Productos("Hamburguesa", "Marvel", R.drawable.hamburguesa, false, false),
+        Productos("Paella valenciana", "Marvel", R.drawable.paella_valenciana, false, false),
+        Productos("Hamburguesa", "Marvel", R.drawable.hamburguesa, false, false),
     )
 }
 
@@ -215,7 +213,7 @@ fun getProductos(): List<Productos> {
 fun MyBottomNavigation(currentScreen: ScreenScaffold, onTabSelected: (ScreenScaffold) -> Unit) {
 
     NavigationBar(
-        containerColor = Color.Gray,
+        containerColor = Color.Black,
         contentColor = Color.White
     ) {
         NavigationBarItem(

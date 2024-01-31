@@ -3,6 +3,7 @@ package com.example.trabajo_android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -67,6 +68,12 @@ fun Navegacion(){
             composable(route = Rutas.MenuPrincipal.ruta) {
                 Inicio(navController, scope, drawerState)
             }
+            composable(route = Rutas.ComidaChina.ruta){
+                ProductosViewChinos()
+            }
+            composable(route = Rutas.ComidaJaponesa.ruta){
+                ProductosViewJapones()
+            }
         }
     }
 }
@@ -75,15 +82,29 @@ fun Navegacion(){
 
 @Composable
 fun MyNavigationDrawer(navController: NavHostController, onCloseDrawer: () -> Unit) {
-    Column(modifier = Modifier.padding(8.dp)) {
+    Column(modifier = Modifier.padding(20.dp)) {
 
-            Text(
-                text = "Comida china",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp)
-                    .clickable { navController.navigate(Rutas.LoginSceem.ruta) }
-            )
+        Text(
+            text = "Comida china",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp)
+                .clickable { navController.navigate(Rutas.ComidaChina.ruta) }
+        )
+        Text(
+            text = "Comida japonesa",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp)
+                .clickable { navController.navigate(Rutas.ComidaJaponesa.ruta) }
+        )
+        Text(
+            text = "Volver Inicio",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp)
+                .clickable { navController.navigate(Rutas.MenuPrincipal.ruta) }
+        )
 
     }
 }
