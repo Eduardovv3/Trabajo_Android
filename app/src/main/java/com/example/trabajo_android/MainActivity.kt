@@ -17,6 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -47,24 +48,24 @@ fun GreetingPreview() {
 
 @Composable
 fun Navegacion(){
+    val navController = rememberNavController()
     val scope = rememberCoroutineScope()
     var drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                MyNavigationDrawer() { scope.launch { drawerState.close() } }
+                MyNavigationDrawer(navController) { scope.launch { drawerState.close() } }
             }
         },
         gesturesEnabled = true
     ) {
-        val navController = rememberNavController()
         NavHost(navController = navController, startDestination = Rutas.LoginSceem.ruta) {
             composable(route = Rutas.LoginSceem.ruta) {
                 LoginScreem(navController)
             }
             composable(route = Rutas.MenuPrincipal.ruta) {
-                Inicio(navController)
+                Inicio(navController, scope, drawerState)
             }
         }
     }
@@ -73,17 +74,17 @@ fun Navegacion(){
 
 
 @Composable
-fun MyNavigationDrawer(onCloseDrawer: () -> Unit) {
+fun MyNavigationDrawer(navController: NavHostController, onCloseDrawer: () -> Unit) {
     Column(modifier = Modifier.padding(8.dp)) {
-        repeat(5) {
+
             Text(
-                text = "Opción ${it + 1}",
+                text = "Comida china",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
-                    .clickable { onCloseDrawer() }
+                    .clickable { navController.navigate(Rutas.LoginSceem.ruta) }
             )
-        }
+
     }
 }
 

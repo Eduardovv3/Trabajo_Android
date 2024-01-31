@@ -3,6 +3,7 @@ package com.example.trabajo_android
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -42,6 +44,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -53,16 +56,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun Inicio(NavController: NavHostController){
+fun Inicio(NavController: NavHostController, scope: CoroutineScope, drawerState: DrawerState, ){
 
+    var currentScreen by rememberSaveable { mutableStateOf(ScreenScaffold.MenuPrincipal) }
     Scaffold(
-        topBar = { MyTopAppBar() },
+        modifier = Modifier.background(Color.Black),
+        topBar = { MyTopAppBar { scope.launch { drawerState.open() } } },
         content = { innerPadding ->
             ProductosView(innerPadding)
+            when (currentScreen) {
+                ScreenScaffold.MenuPrincipal -> ProductosView(innerPadding)
+                ScreenScaffold.Favoritos -> ProductosViewFav(innerPadding)
+                else -> {}
+            }
         },
-        bottomBar = { MyBottomNavigation(NavController) },
+        bottomBar = { MyBottomNavigation( currentScreen, onTabSelected = { screen -> currentScreen = screen }) },
         floatingActionButtonPosition = FabPosition.End,
         floatingActionButton = { MyFAB() }
     )
@@ -70,12 +82,12 @@ fun Inicio(NavController: NavHostController){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBar() {
+fun MyTopAppBar(OnOpen: () -> Unit) {
     TopAppBar(
         title = { Text("Platos más populares") },
         colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.White),
         navigationIcon = {
-            IconButton(onClick = { }) { Icon(Icons.Filled.Menu, contentDescription = "Desc") }
+            IconButton(onClick = { OnOpen()}) { Icon(Icons.Filled.Menu, contentDescription = "Desc") }
         },
         actions = {
             IconButton(onClick = {}) { Icon(Icons.Filled.Add, contentDescription = "Desc") }
@@ -87,6 +99,8 @@ fun MyTopAppBar() {
 
 @Composable
 fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
+    var favorito :Boolean by rememberSaveable { mutableStateOf(productos.Favorito) }
+    var cesta :Boolean by rememberSaveable { mutableStateOf(productos.Cesta) }
     Card(border = BorderStroke(2.dp, Color.Red),
         modifier = Modifier
             .width(175.dp)
@@ -126,8 +140,8 @@ fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
                     fontSize = 12.sp
                 )
                 Checkbox(
-                    checked = productos.Favorito,
-                    onCheckedChange = { productos.Favorito = !productos.Favorito }
+                    checked = favorito,
+                    onCheckedChange = { favorito = !favorito }
                 )
             }
             Column (
@@ -140,8 +154,8 @@ fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
                     fontSize = 12.sp
                 )
                 Checkbox(
-                    checked = productos.Cesta,
-                    onCheckedChange = { productos.Cesta = !productos.Cesta }
+                    checked = cesta,
+                    onCheckedChange = { cesta = !cesta }
                 )
 
             }
@@ -156,11 +170,12 @@ fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
 @Composable
 fun ProductosView(innerPadding: PaddingValues) {
     val context = LocalContext.current
-
     LazyVerticalGrid(
         modifier = Modifier
             .consumeWindowInsets(innerPadding)
-            .padding(vertical = 8.dp, horizontal = 16.dp),
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+            .background(Color.Black)
+            .fillMaxSize(),
         columns = GridCells.Fixed(2),
         contentPadding = innerPadding,
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -177,9 +192,9 @@ fun ProductosView(innerPadding: PaddingValues) {
 
 fun getProductos(): List<Productos> {
     return listOf(
-        Productos("Paella valenciana", "Peter Parker", "20€", R.drawable.paella_valenciana, false, false),
+        Productos("Paella valenciana", "Peter Parker", "20€", R.drawable.paella_valenciana, true, false),
         Productos("Hamburguesa", "Peter Parker", "14.99", R.drawable.hamburguesa, true, false),
-        Productos("Paella valenciana", "Peter Parker", "Marvel", R.drawable.paella_valenciana, false, false),
+        Productos("Paella valenciana", "Peter Parker", "Marvel", R.drawable.paella_valenciana, true, false),
         Productos("Hamburguesa", "Peter Parker", "Marvel", R.drawable.hamburguesa, false, false),
         Productos("Paella valenciana", "Peter Parker", "Marvel", R.drawable.paella_valenciana, false, false),
         Productos("Hamburguesa", "Peter Parker", "Marvel", R.drawable.hamburguesa, false, false),
@@ -197,15 +212,15 @@ fun getProductos(): List<Productos> {
 }
 
 @Composable
-fun MyBottomNavigation(NavController: NavHostController) {
-    var index by rememberSaveable { mutableIntStateOf(0) }
+fun MyBottomNavigation(currentScreen: ScreenScaffold, onTabSelected: (ScreenScaffold) -> Unit) {
+
     NavigationBar(
         containerColor = Color.Gray,
         contentColor = Color.White
     ) {
         NavigationBarItem(
-            selected = index == 0,
-            onClick = { NavController.navigate(route = Rutas.LoginSceem.ruta)},
+            selected = currentScreen ==  ScreenScaffold.MenuPrincipal,
+            onClick = {onTabSelected(ScreenScaffold.MenuPrincipal)},
             icon = {
                 Icon(
                     imageVector = Icons.Default.Home,
@@ -215,8 +230,8 @@ fun MyBottomNavigation(NavController: NavHostController) {
             label = { Text("Home") }
         )
         NavigationBarItem(
-            selected = index == 1,
-            onClick = { NavController.navigate(route = Rutas.Favoritos.ruta)},
+            selected = currentScreen ==  ScreenScaffold.Favoritos,
+            onClick = { onTabSelected(ScreenScaffold.Favoritos)},
             icon = {
                 Icon(
                     imageVector = Icons.Default.Favorite,
@@ -226,8 +241,8 @@ fun MyBottomNavigation(NavController: NavHostController) {
             label = { Text("FAV") }
         )
         NavigationBarItem(
-            selected = index == 2,
-            onClick = { index = 2 },
+            selected = currentScreen ==  ScreenScaffold.Perfil,
+            onClick = {onTabSelected(ScreenScaffold.Perfil)},
             icon = {
                 Icon(
                     imageVector = Icons.Default.Person,
