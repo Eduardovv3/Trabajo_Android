@@ -1,6 +1,8 @@
 package com.example.trabajo_android
 
 import android.app.Activity
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -63,23 +65,23 @@ fun Header(modifier: Modifier){
 }
 @Composable
 fun Body(modifier: Modifier, NavController: NavHostController) {
-    var nombre by rememberSaveable { mutableStateOf("") }
+    //var nombre by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
     var contrasenya by rememberSaveable { mutableStateOf("")}
-    val isLoginEnable by rememberSaveable { mutableStateOf(false)}
+
     Column(
         modifier = modifier
     ) {
         ImageLogo(Modifier.align(Alignment.CenterHorizontally))
-        Spacer(modifier = Modifier.size(20.dp))
-        Nombre(nombre){nombre = it}
+        //Spacer(modifier = Modifier.size(20.dp))
+        //Nombre(nombre){nombre = it}
         Spacer(modifier = Modifier.size(8.dp))
         Email(email) {email = it}
         Spacer(modifier = Modifier.size(8.dp))
         Password(contrasenya) {contrasenya = it}
         Spacer(modifier = Modifier.size(8.dp))
         //ForgotPass()
-        LoginButton(isLoginEnable, NavController)
+        LoginButton( email, contrasenya, NavController)
         //LoginDivisor()
     }
 }
@@ -94,7 +96,7 @@ fun ImageLogo(modifier: Modifier) {
 
 }
 
-@Composable
+/*@Composable
 fun Nombre(nombre: String, funtion: (String) -> Unit){
     TextField(
         value = nombre,
@@ -103,15 +105,15 @@ fun Nombre(nombre: String, funtion: (String) -> Unit){
         placeholder = {Text( text = "Nombre")},
         maxLines = 1,
         singleLine = true,
-//        colors = TextFieldDefaults.textFieldColors(
-//            textColor = Color(0xFFB2B2B2),
-//            containerColor = Color(0xFFFAFAFA),
-//            focusedIndicatorColor = Color.Transparent,
-//            unfocusedIndicatorColor = Color.Transparent
-//        ),
+        colors = TextFieldDefaults.textFieldColors(
+            textColor = Color(0xFFB2B2B2),
+            containerColor = Color(0xFFFAFAFA),
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        ),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
     )
-}
+}*/
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -167,9 +169,9 @@ fun Password(contrasenya: String, funtion: (String) -> Unit) {
     )
 }
 @Composable
-fun LoginButton(loginEnable: Boolean,NavController: NavHostController) {
+fun LoginButton(correo:String, contrasenya:String, NavController: NavHostController) {
     Button(
-        onClick = { NavController.navigate(route = Rutas.MenuPrincipal.ruta) },
+        onClick = { ConfirmarUsu(correo, contrasenya, NavController)  },
         enabled = true,
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
@@ -183,3 +185,17 @@ fun LoginButton(loginEnable: Boolean,NavController: NavHostController) {
         Text("Log In")
     }
 }
+@Composable
+fun ConfirmarUsu(correo:String, contrasenya:String, NavController: NavHostController): Unit? {
+    val context = LocalContext.current
+    getUsuarios().forEach { usuario ->
+        if (usuario.Correo == correo && usuario.Contrasenya == contrasenya){
+            return NavController.navigate(route = Rutas.MenuPrincipal.ruta)
+        }else{
+            Toast.makeText(context , "El correo o contraseña no son correctos",  Toast.LENGTH_SHORT).show()
+            return null
+        }
+    }
+    return null
+}
+

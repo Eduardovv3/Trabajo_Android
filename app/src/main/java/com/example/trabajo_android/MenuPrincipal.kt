@@ -73,6 +73,7 @@ fun Inicio(NavController: NavHostController, scope: CoroutineScope, drawerState:
             when (currentScreen) {
                 ScreenScaffold.MenuPrincipal -> ProductosView(innerPadding)
                 ScreenScaffold.Favoritos -> ProductosViewFav(innerPadding)
+                ScreenScaffold.Perfil -> UsuariosView(innerPadding)
                 else -> {}
             }
         },
@@ -104,7 +105,7 @@ fun MyTopAppBar(OnOpen: () -> Unit) {
 fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
     var favorito :Boolean by rememberSaveable { mutableStateOf(productos.Favorito) }
     var cesta :Boolean by rememberSaveable { mutableStateOf(productos.Cesta) }
-    Card(border = BorderStroke(2.dp, Color.Red),
+    Card(border = BorderStroke(2.dp, Color.White),
         modifier = Modifier
             .width(175.dp)
             .clickable { onItemSelected(productos) }){

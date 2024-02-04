@@ -18,13 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.trabajo_android.ui.theme.Trabajo_AndroidTheme
 
-@Preview(showBackground = true)
-@Composable
-fun PantallaFav() {
-    Trabajo_AndroidTheme {
-
-    }
-}
 
 @Composable
 fun ProductosViewFav(innerPadding: PaddingValues) {
