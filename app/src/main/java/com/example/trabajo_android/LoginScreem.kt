@@ -170,15 +170,12 @@ fun Password(contrasenya: String, funtion: (String) -> Unit) {
 }
 @Composable
 fun LoginButton(correo:String, contrasenya:String, NavController: NavHostController) {
-    val context = LocalContext.current
     Button(
         onClick = {
             ListaUsuarios.forEach { usuario ->
                 if (usuario.Correo == correo && usuario.Contrasenya == contrasenya){
+                    NavController.popBackStack()
                     NavController.navigate(route = Rutas.MenuPrincipal.ruta + "/" + correo)
-                }else{
-                    Toast.makeText(context , "El correo o contraseña no son correctos",  Toast.LENGTH_SHORT).show()
-
                 }
             }  },
         enabled = true,

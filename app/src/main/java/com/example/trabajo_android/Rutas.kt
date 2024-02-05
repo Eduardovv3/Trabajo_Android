@@ -8,6 +8,7 @@ sealed class Rutas (var ruta:String){
     object ComidaChina:Rutas("ComidaChina")
     object ComidaJaponesa:Rutas("ComidaJaponesa")
     object Valoracion:Rutas("Valoracion")
+    object Cesta:Rutas("Cesta")
 
 
 }

@@ -31,21 +31,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
-fun getProductosJaponesa(): List<Productos> {
-    return listOf(
-        Productos("Sushi", "20€", R.drawable.sushi, true, false),
-        Productos("Tempura","14.99", R.drawable.tempura, true, false),
-        Productos("Ramen", "Marvel", R.drawable.ramen, true, false),
-        Productos("Soba", "Marvel", R.drawable.soba, false, false),
-        Productos("Udon","Marvel", R.drawable.udon, false, false),
-        Productos("Takoyaki", "Marvel", R.drawable.takoyaki, false, false),
-        Productos("Onigiri", "Marvel", R.drawable.onigiri, false, false),
-        Productos("Okonomiyaki", "Marvel", R.drawable.okonomiyaki, false, false),
-        Productos("Yakitori", "Marvel", R.drawable.yakitori, false, false),
-        Productos("Katsudon", "Marvel", R.drawable.katsudon, false, false),
-
-        )
-}
 
 @Composable
 fun ProductosViewJapones(innerPadding: PaddingValues) {
@@ -61,7 +46,7 @@ fun ProductosViewJapones(innerPadding: PaddingValues) {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
 
             ) {
-            items(getProductosJaponesa()) {
+            items(ListaProductosJaponeses) {
                 ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
             }
         }

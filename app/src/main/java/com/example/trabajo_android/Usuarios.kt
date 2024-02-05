@@ -13,5 +13,6 @@ data class Usuarios(
 )
 
 var ListaUsuarios = mutableListOf(
-    Usuarios(R.drawable.hamburguesa, "Eduardo", "Vivo Medina", "giwgwbg", "eduardovivomedina@gmail.com", "12345")
+    Usuarios(R.drawable.eduardo_vivo_medina, "Eduardo", "Vivo Medina", "giwgwbg", "eduardovivomedina@gmail.com", "12345"),
+    Usuarios(R.drawable.david_antolin, "David", "Antolin Gutierrez", "giwgwbg", "davidantolingutierrez@gmail.com", "12345")
 )

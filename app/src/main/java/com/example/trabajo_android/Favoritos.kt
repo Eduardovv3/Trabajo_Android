@@ -25,7 +25,7 @@ fun ProductosViewFav(innerPadding: PaddingValues) {
     LazyVerticalGrid(
         modifier = Modifier
             .consumeWindowInsets(innerPadding)
-            .padding(vertical = 8.dp, horizontal = 16.dp)
+            .padding(vertical = 8.dp)
             .background(Color.Black)
             .fillMaxSize(),
         columns = GridCells.Fixed(2),
@@ -39,12 +39,12 @@ fun ProductosViewFav(innerPadding: PaddingValues) {
                 ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
             }
         }
-        items(getProductosChinos()) {
+        items(ListaProductosChinos) {
             if(it.Favorito == true){
                 ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
             }
         }
-        items(getProductosJaponesa()) {
+        items(ListaProductosJaponeses) {
             if(it.Favorito == true){
                 ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
             }

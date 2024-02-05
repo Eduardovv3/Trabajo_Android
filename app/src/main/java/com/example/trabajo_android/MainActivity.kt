@@ -77,7 +77,10 @@ fun Navegacion(){
                 ScaffoldJapones(navController)
             }
             composable(route = Rutas.Valoracion.ruta){
-                Valorar()
+                ScaffoldValorar(navController)
+            }
+            composable(route = Rutas.Cesta.ruta){
+                ScaffoldCesta(navController)
             }
         }
     }
@@ -94,21 +97,30 @@ fun MyNavigationDrawer(navController: NavHostController, onCloseDrawer: () -> Un
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 4.dp)
-                .clickable { navController.navigate(Rutas.ComidaChina.ruta) }
+                .clickable {
+                    onCloseDrawer()
+                    navController.navigate(Rutas.ComidaChina.ruta)
+                }
         )
         Text(
             text = "Comida japonesa",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 4.dp)
-                .clickable { navController.navigate(Rutas.ComidaJaponesa.ruta) }
+                .clickable {
+                    onCloseDrawer()
+                    navController.navigate(Rutas.ComidaJaponesa.ruta)
+                }
         )
         Text(
             text = "Valora nuestra APP",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 4.dp)
-                .clickable { navController.navigate(Rutas.Valoracion.ruta) }
+                .clickable {
+                    onCloseDrawer()
+                    navController.navigate(Rutas.Valoracion.ruta)
+                }
         )
 
     }

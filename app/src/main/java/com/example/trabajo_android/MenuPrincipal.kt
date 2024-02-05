@@ -6,7 +6,9 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,12 +25,18 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.AddShoppingCart
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.RemoveShoppingCart
+import androidx.compose.material.icons.outlined.ShoppingBag
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DrawerState
@@ -51,6 +59,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -66,6 +75,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+
 
 @Composable
 fun Inicio(NavController: NavHostController, correo: String?){
@@ -85,7 +95,7 @@ fun Inicio(NavController: NavHostController, correo: String?){
     ) {
         Scaffold(
             modifier = Modifier.background(Color.Black),
-            topBar = { MyTopAppBar { scope.launch { drawerState.open() } } },
+            topBar = { MyTopAppBar (currentScreen){scope.launch { drawerState.open() } } },
             content = { innerPadding ->
                 when (currentScreen) {
                     ScreenScaffold.MenuPrincipal -> ProductosView(innerPadding)
@@ -100,24 +110,27 @@ fun Inicio(NavController: NavHostController, correo: String?){
                     onTabSelected = { screen -> currentScreen = screen })
             },
             floatingActionButtonPosition = FabPosition.End,
-            floatingActionButton = { MyFAB() }
+            floatingActionButton = { MyFAB(NavController) }
         )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBar(OnOpen: () -> Unit) {
+fun MyTopAppBar(currentScreen: ScreenScaffold,OnOpen: () -> Unit) {
     val activity = LocalContext.current as? Activity
     TopAppBar(
-        title = { Text("Platos más populares") },
+        title = { when (currentScreen) {
+            ScreenScaffold.MenuPrincipal -> Text(text = "Platos principales")
+            ScreenScaffold.Favoritos -> Text(text = "Favoritos")
+            ScreenScaffold.Perfil -> Text(text = "Perfil")
+
+        } },
         colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Black),
         navigationIcon = {
             IconButton(onClick = { OnOpen()}) { Icon(Icons.Filled.Menu, contentDescription = "Desc") }
         },
         actions = {
-            IconButton(onClick = {}) { Icon(Icons.Filled.Add, contentDescription = "Desc") }
-            Spacer(modifier = Modifier.size(6.dp))
             IconButton(onClick = {activity?.finish() }) { Icon(Icons.Filled.Close, contentDescription = "Desc") }
         }
     )
@@ -125,6 +138,12 @@ fun MyTopAppBar(OnOpen: () -> Unit) {
 
 @Composable
 fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
+    val checkedStateFav = remember { mutableStateOf(productos.Favorito) }
+    productos.Favorito = checkedStateFav.value
+    var interactionSourceFav: MutableInteractionSource = remember { MutableInteractionSource() }
+    val checkedStateCes = remember { mutableStateOf(productos.Cesta) }
+    productos.Cesta = checkedStateCes.value
+    var interactionSourceCes: MutableInteractionSource = remember { MutableInteractionSource() }
     Card(border = BorderStroke(2.dp, Color.White),
         modifier = Modifier
             .width(175.dp)
@@ -133,7 +152,7 @@ fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
             Image(
                 painter = painterResource(id = productos.Imagen),
                 contentDescription = "Imagen comida",
-                modifier = Modifier.size(175.dp),
+                modifier = Modifier.size(200.dp),
                 contentScale = ContentScale.Crop
             )
             Text(
@@ -142,7 +161,7 @@ fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
 
             )
             Text(
-                text = productos.Precio,
+                text = productos.Precio.toString() + "€",
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(6.dp),
@@ -158,10 +177,23 @@ fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
                     modifier = Modifier,
                     fontSize = 12.sp
                 )
-                Checkbox(
-                    checked = productos.Favorito,
-                    onCheckedChange = { productos.Favorito = !productos.Favorito }
-                )
+                Box(
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .size(24.dp)
+                        .clickable(
+                            interactionSource = interactionSourceFav,
+                            indication = null,
+                            onClick = { checkedStateFav.value = !checkedStateFav.value })
+                ){
+                    if (checkedStateFav.value) {
+                        productos.Favorito = checkedStateFav.value
+                        Icon(imageVector = Icons.Outlined.Favorite, contentDescription = "estado")
+                    }else{
+                        productos.Favorito = checkedStateFav.value
+                        Icon(imageVector = Icons.Outlined.FavoriteBorder, contentDescription = "estado")
+                    }
+                }
             }
             Column (
                 modifier = Modifier.fillMaxSize(),
@@ -172,10 +204,23 @@ fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
                     modifier = Modifier,
                     fontSize = 12.sp
                 )
-                Checkbox(
-                    checked = productos.Cesta,
-                    onCheckedChange = { productos.Cesta = !productos.Cesta }
-                )
+                Box(
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .size(24.dp)
+                        .clickable(
+                            interactionSource = interactionSourceCes,
+                            indication = null,
+                            onClick = { checkedStateCes.value = !checkedStateCes.value })
+                ){
+                    if (checkedStateCes.value) {
+                        productos.Cesta = checkedStateCes.value
+                        Icon(imageVector = Icons.Outlined.AddShoppingCart, contentDescription = "estado")
+                    }else{
+                        productos.Cesta = checkedStateCes.value
+                        Icon(imageVector = Icons.Outlined.RemoveShoppingCart, contentDescription = "estado")
+                    }
+                }
 
             }
 
@@ -185,14 +230,14 @@ fun ItemProducto(productos: Productos, onItemSelected: (Productos)-> Unit) {
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+
 @Composable
 fun ProductosView(innerPadding: PaddingValues) {
     val context = LocalContext.current
     LazyVerticalGrid(
         modifier = Modifier
             .consumeWindowInsets(innerPadding)
-            .padding(vertical = 8.dp, horizontal = 16.dp)
+            .padding(vertical = 8.dp)
             .background(Color.Black)
             .fillMaxSize(),
         columns = GridCells.Fixed(2),
@@ -207,28 +252,6 @@ fun ProductosView(innerPadding: PaddingValues) {
     }
 }
 
-
-
-fun getProductos(): List<Productos> {
-    return listOf(
-        Productos("Paella valenciana", "20€", R.drawable.paella_valenciana, true, false),
-        Productos("Hamburguesa", "14.99", R.drawable.hamburguesa, true, false),
-        Productos("Paella valenciana", "Marvel", R.drawable.paella_valenciana, true, false),
-        Productos("Hamburguesa", "Marvel", R.drawable.hamburguesa, false, false),
-        Productos("Paella valenciana", "Marvel", R.drawable.paella_valenciana, false, false),
-        Productos("Hamburguesa", "Marvel", R.drawable.hamburguesa, false, false),
-        Productos("Paella valenciana", "Marvel", R.drawable.paella_valenciana, false, false),
-        Productos("Hamburguesa", "Marvel", R.drawable.hamburguesa, false, false),
-        Productos("Paella valenciana", "Marvel", R.drawable.paella_valenciana, false, false),
-        Productos("Hamburguesa", "Marvel", R.drawable.hamburguesa, false, false),
-        Productos("Paella valenciana", "Marvel", R.drawable.paella_valenciana, false, false),
-        Productos("Hamburguesa", "Marvel", R.drawable.hamburguesa, false, false),
-        Productos("Paella valenciana", "Marvel", R.drawable.paella_valenciana, false, false),
-        Productos("Hamburguesa", "Marvel", R.drawable.hamburguesa, false, false),
-        Productos("Paella valenciana", "Marvel", R.drawable.paella_valenciana, false, false),
-        Productos("Hamburguesa", "Marvel", R.drawable.hamburguesa, false, false),
-    )
-}
 
 @Composable
 fun MyBottomNavigation(currentScreen: ScreenScaffold, onTabSelected: (ScreenScaffold) -> Unit) {
@@ -274,10 +297,10 @@ fun MyBottomNavigation(currentScreen: ScreenScaffold, onTabSelected: (ScreenScaf
 }
 
 @Composable
-fun MyFAB() {
+fun MyFAB(navController: NavHostController) {
     FloatingActionButton(
-        onClick = { /* fab click handler */ }
+        onClick = { navController.navigate(Rutas.Cesta.ruta)}
     ) {
-        Icon(imageVector = Icons.Default.Check, contentDescription = "FAB Check")
+        Text(text = "Cesta")
     }
 }
