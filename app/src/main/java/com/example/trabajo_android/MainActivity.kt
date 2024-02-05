@@ -14,14 +14,20 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.trabajo_android.ui.theme.Trabajo_AndroidTheme
 import kotlinx.coroutines.launch
 
@@ -50,33 +56,32 @@ fun GreetingPreview() {
 @Composable
 fun Navegacion(){
     val navController = rememberNavController()
-    val scope = rememberCoroutineScope()
-    var drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet {
-                MyNavigationDrawer(navController) { scope.launch { drawerState.close() } }
-            }
-        },
-        gesturesEnabled = true
-    ) {
         NavHost(navController = navController, startDestination = Rutas.LoginSceem.ruta) {
             composable(route = Rutas.LoginSceem.ruta) {
                 LoginScreem(navController)
             }
-            composable(route = Rutas.MenuPrincipal.ruta) {
-                Inicio(navController, scope, drawerState)
+            composable(route = Rutas.MenuPrincipal.ruta + "/{correo}",
+                arguments = listOf(navArgument(name = "correo"){
+                    type = NavType.StringType
+                }))
+            {
+                Inicio(navController, it.arguments?.getString("correo"))
             }
             composable(route = Rutas.ComidaChina.ruta){
-                ProductosViewChinos()
+                ScaffoldChino(navController)
             }
             composable(route = Rutas.ComidaJaponesa.ruta){
-                ProductosViewJapones()
+                ScaffoldJapones(navController)
+            }
+            composable(route = Rutas.ComidaJaponesa.ruta){
+                ScaffoldJapones(navController)
+            }
+            composable(route = Rutas.Valoracion.ruta){
+                Valorar()
             }
         }
     }
-}
+
 
 
 
@@ -99,11 +104,11 @@ fun MyNavigationDrawer(navController: NavHostController, onCloseDrawer: () -> Un
                 .clickable { navController.navigate(Rutas.ComidaJaponesa.ruta) }
         )
         Text(
-            text = "Volver Inicio",
+            text = "Valora nuestra APP",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 4.dp)
-                .clickable { navController.navigate(Rutas.MenuPrincipal.ruta) }
+                .clickable { navController.navigate(Rutas.Valoracion.ruta) }
         )
 
     }

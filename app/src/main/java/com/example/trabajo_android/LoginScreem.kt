@@ -170,8 +170,17 @@ fun Password(contrasenya: String, funtion: (String) -> Unit) {
 }
 @Composable
 fun LoginButton(correo:String, contrasenya:String, NavController: NavHostController) {
+    val context = LocalContext.current
     Button(
-        onClick = { ConfirmarUsu(correo, contrasenya, NavController)  },
+        onClick = {
+            ListaUsuarios.forEach { usuario ->
+                if (usuario.Correo == correo && usuario.Contrasenya == contrasenya){
+                    NavController.navigate(route = Rutas.MenuPrincipal.ruta + "/" + correo)
+                }else{
+                    Toast.makeText(context , "El correo o contraseña no son correctos",  Toast.LENGTH_SHORT).show()
+
+                }
+            }  },
         enabled = true,
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
@@ -185,17 +194,5 @@ fun LoginButton(correo:String, contrasenya:String, NavController: NavHostControl
         Text("Log In")
     }
 }
-@Composable
-fun ConfirmarUsu(correo:String, contrasenya:String, NavController: NavHostController): Unit? {
-    val context = LocalContext.current
-    getUsuarios().forEach { usuario ->
-        if (usuario.Correo == correo && usuario.Contrasenya == contrasenya){
-            return NavController.navigate(route = Rutas.MenuPrincipal.ruta)
-        }else{
-            Toast.makeText(context , "El correo o contraseña no son correctos",  Toast.LENGTH_SHORT).show()
-            return null
-        }
-    }
-    return null
-}
+
 

@@ -11,3 +11,7 @@ data class Usuarios(
     var Contrasenya:String
 
 )
+
+var ListaUsuarios = mutableListOf(
+    Usuarios(R.drawable.hamburguesa, "Eduardo", "Vivo Medina", "giwgwbg", "eduardovivomedina@gmail.com", "12345")
+)

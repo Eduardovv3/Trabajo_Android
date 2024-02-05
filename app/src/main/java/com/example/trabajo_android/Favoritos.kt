@@ -34,7 +34,7 @@ fun ProductosViewFav(innerPadding: PaddingValues) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
 
         ) {
-        items(getProductos()) {
+        items(ListaProductosPrincipal) {
             if(it.Favorito == true){
                 ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
             }

@@ -24,52 +24,53 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun MiPerfil(Usuarios: Usuarios){
+fun MiPerfil(innerPadding: PaddingValues,Usuarios: Usuarios){
     Column (
         modifier = Modifier
+            .fillMaxSize()
             .background(Color.Black)
+            .padding(innerPadding)
+
 
     ){
         Image(
             painter = painterResource(id = Usuarios.Avatar),
             contentDescription = "Avatar",
-            modifier = Modifier.size(175.dp),
+            modifier = Modifier.size(175.dp)
+                .padding(15.dp),
             contentScale = ContentScale.Crop
         )
         Text(
-            text = Usuarios.Nombre,
+            text = "Nombre : " + Usuarios.Nombre,
             modifier = Modifier.align(Alignment.Start)
+                .padding(15.dp)
         )
         Text(
-            text = Usuarios.Apellidos,
+            text = "Apellidos : " + Usuarios.Apellidos,
             modifier = Modifier.align(Alignment.Start)
+                .padding(15.dp)
         )
         Text(
-            text = Usuarios.Direccion,
+            text = "Direccion : " + Usuarios.Direccion,
             modifier = Modifier.align(Alignment.Start)
+                .padding(15.dp)
         )
         Text(
-            text = Usuarios.Correo,
+            text = "Correo : " + Usuarios.Correo,
             modifier = Modifier.align(Alignment.Start)
+                .padding(15.dp)
         )
 
     }
 }
 
 @Composable
-fun UsuariosView(innerPadding: PaddingValues) {
-    getUsuarios().forEach { usuario ->
-        if (usuario.Correo == Usuarios.Correo){
-            MiPerfil(usuario)
+fun UsuariosView(innerPadding: PaddingValues, correo:String?) {
+    ListaUsuarios.forEach {usuario ->
+        if (usuario.Correo == correo){
+            MiPerfil(innerPadding,usuario)
         }
     }
 
 }
 
-@Composable
-fun getUsuarios(): List<Usuarios> {
-    return listOf(
-
-    )
-
-}
