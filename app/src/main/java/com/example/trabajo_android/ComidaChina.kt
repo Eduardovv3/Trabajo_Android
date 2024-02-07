@@ -45,8 +45,11 @@ fun ProductosViewChinos(innerPadding: PaddingValues) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
 
         ) {
-        items(ListaProductosChinos) {
-            ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
+        items(ListaProductos) {
+            if(it.Categoria.equals("china")){
+                ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
+            }
+
         }
     }
 }

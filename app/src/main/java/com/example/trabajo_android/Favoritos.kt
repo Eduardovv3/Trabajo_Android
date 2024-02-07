@@ -21,6 +21,7 @@ import com.example.trabajo_android.ui.theme.Trabajo_AndroidTheme
 
 @Composable
 fun ProductosViewFav(innerPadding: PaddingValues) {
+    val listafav = ListaProductos.filter { it.Favorito }
     val context = LocalContext.current
     LazyVerticalGrid(
         modifier = Modifier
@@ -34,20 +35,8 @@ fun ProductosViewFav(innerPadding: PaddingValues) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
 
         ) {
-        items(ListaProductosPrincipal) {
-            if(it.Favorito == true){
+        items(listafav) {
                 ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
-            }
-        }
-        items(ListaProductosChinos) {
-            if(it.Favorito == true){
-                ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
-            }
-        }
-        items(ListaProductosJaponeses) {
-            if(it.Favorito == true){
-                ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
-            }
         }
     }
 }

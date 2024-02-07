@@ -246,8 +246,11 @@ fun ProductosView(innerPadding: PaddingValues) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
 
         ) {
-        items(ListaProductosPrincipal) {
-            ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
+        items(ListaProductos) {
+            if(it.Categoria.equals("española")){
+                ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
+            }
+
         }
     }
 }

@@ -38,6 +38,7 @@ import androidx.navigation.compose.rememberNavController
 var precio:Int = 0
 @Composable
 fun ProductosViewCes(innerPadding: PaddingValues) {
+    val listaces = ListaProductos.filter { it.Cesta }
     precio =0
     val context = LocalContext.current
     LazyVerticalGrid(
@@ -52,23 +53,9 @@ fun ProductosViewCes(innerPadding: PaddingValues) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
 
         ) {
-        items(ListaProductosPrincipal) {
-            if(it.Cesta == true){
+        items(listaces) {
                 precio = precio + it.Precio
                 ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
-            }
-        }
-        items(ListaProductosChinos) {
-            if(it.Cesta == true){
-                precio = precio + it.Precio
-                ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
-            }
-        }
-        items(ListaProductosJaponeses) {
-            if(it.Cesta == true){
-                precio = precio + it.Precio
-                ItemProducto(it) { Toast.makeText(context, it.Nombre, Toast.LENGTH_SHORT).show() }
-            }
         }
     }
 }

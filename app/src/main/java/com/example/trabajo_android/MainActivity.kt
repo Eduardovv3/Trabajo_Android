@@ -56,34 +56,34 @@ fun GreetingPreview() {
 @Composable
 fun Navegacion(){
     val navController = rememberNavController()
-        NavHost(navController = navController, startDestination = Rutas.LoginSceem.ruta) {
-            composable(route = Rutas.LoginSceem.ruta) {
-                LoginScreem(navController)
-            }
-            composable(route = Rutas.MenuPrincipal.ruta + "/{correo}",
-                arguments = listOf(navArgument(name = "correo"){
-                    type = NavType.StringType
-                }))
-            {
-                Inicio(navController, it.arguments?.getString("correo"))
-            }
-            composable(route = Rutas.ComidaChina.ruta){
-                ScaffoldChino(navController)
-            }
-            composable(route = Rutas.ComidaJaponesa.ruta){
-                ScaffoldJapones(navController)
-            }
-            composable(route = Rutas.ComidaJaponesa.ruta){
-                ScaffoldJapones(navController)
-            }
-            composable(route = Rutas.Valoracion.ruta){
-                ScaffoldValorar(navController)
-            }
-            composable(route = Rutas.Cesta.ruta){
-                ScaffoldCesta(navController)
-            }
+    NavHost(navController = navController, startDestination = Rutas.LoginSceem.ruta) {
+        composable(route = Rutas.LoginSceem.ruta) {
+            LoginScreem(navController)
+        }
+        composable(route = Rutas.MenuPrincipal.ruta + "/{correo}",
+            arguments = listOf(navArgument(name = "correo"){
+                type = NavType.StringType
+            }))
+        {
+            Inicio(navController, it.arguments?.getString("correo"))
+        }
+        composable(route = Rutas.ComidaChina.ruta){
+            ScaffoldChino(navController)
+        }
+        composable(route = Rutas.ComidaJaponesa.ruta){
+            ScaffoldJapones(navController)
+        }
+        composable(route = Rutas.ComidaJaponesa.ruta){
+            ScaffoldJapones(navController)
+        }
+        composable(route = Rutas.Valoracion.ruta){
+            ScaffoldValorar(navController)
+        }
+        composable(route = Rutas.Cesta.ruta){
+            ScaffoldCesta(navController)
         }
     }
+}
 
 
 
